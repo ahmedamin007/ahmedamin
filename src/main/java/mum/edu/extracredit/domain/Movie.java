@@ -1,50 +1,93 @@
 package mum.edu.extracredit.domain;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 
 
 @Entity
-public class Movie {
 
+public class Movie implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue
 	private int id;
 	private String name;
 	private int year;
-	private String genre;
+	@ElementCollection
+	@Enumerated(EnumType.STRING)
+	private Genere generes ;
 	private String director;
 	private String characterName;
 	@OneToMany
 	private List<Artist> artistList;
-	@OneToMany
-	private List<Rating> ratingList;
+	@Enumerated(EnumType.STRING)
+	private MovieRating ratingList;
+	@OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+	private List<Review> movieReviews = new ArrayList<Review>();
 	
-	public Movie() {
-		
-	}
-	public Movie(int id, String name, int year, String genre, String director, String characterName,
-			List<Artist> artistList, List<Rating> ratingList) {
+
+	public Movie(int id, String name, int year,  Genere  generes, String director, String characterName,
+			List<Artist> artistList, MovieRating ratingList, List<Review> movieReviews) {
 		this.id = id;
 		this.name = name;
 		this.year = year;
-		this.genre = genre;
+		this.generes = generes;
 		this.director = director;
 		this.characterName = characterName;
 		this.artistList = artistList;
 		this.ratingList = ratingList;
+		this.movieReviews = movieReviews;
+	}
+
+	public void setGeneres( Genere  generes) {
+		this.generes = generes;
+	}
+
+	public void setRatingList(MovieRating ratingList) {
+		this.ratingList = ratingList;
+	}
+
+	public void setMovieReviews(List<Review> movieReviews) {
+		this.movieReviews = movieReviews;
+	}
+	
+	public Movie() {
+		
+	}
+
+	public  Genere  getGeneres() {
+		return generes;
+	}
+
+	public MovieRating getRatingList() {
+		return ratingList;
+	}
+
+	public List<Review> getMovieReviews() {
+		return movieReviews;
+	}
+	
+	public void addMovieReviews(Review review){
+		movieReviews.add(review);
 	}
 	
 	public void addArtist(Artist artist){
 		artistList.add(artist);
 	}
 
-	public void addRating(Rating rating){
-		ratingList.add(rating);
-	}
 	
 	public int getId() {
 		return id;
@@ -70,13 +113,6 @@ public class Movie {
 		this.year = year;
 	}
 
-	public String getGenre() {
-		return genre;
-	}
-
-	public void setGenre(String genre) {
-		this.genre = genre;
-	}
 
 	public String getDirector() {
 		return director;
@@ -102,13 +138,6 @@ public class Movie {
 		this.artistList = artistList;
 	}
 
-	public List<Rating> getRatingList() {
-		return ratingList;
-	}
-
-	public void setRatingList(List<Rating> ratingList) {
-		this.ratingList = ratingList;
-	}
 
 
 

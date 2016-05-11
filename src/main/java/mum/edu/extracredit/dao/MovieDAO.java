@@ -21,5 +21,7 @@ public class MovieDAO implements IMovies {
 	public Collection<Movie> getMovies() {
 		return moviesList;
 	}
+	
+	
 
 }
